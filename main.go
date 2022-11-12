@@ -23,6 +23,6 @@ func main() {
 	r.HandleFunc("/cars", createCar).Methods("POST")
 	r.HandleFunc("/cars/{id}", updateCar).Methods("PUT")
 	r.HandleFunc("/cars", deleteCar).Methods("DELETE")
-	fmt.Printf("Hello World")
+	fmt.Printf("Hello Go")
 	fmt.Printf("Hello World")
 }
