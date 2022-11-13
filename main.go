@@ -35,6 +35,18 @@ func deleteCar(w http.ResponseWriter, r *http.Request){
 		}
 	}
 }
+
+func getCar(w http.ResponseWriter, r *http.Request){
+	w.Header().Set("Content-Type", "application/json")
+	params := mux.Vars(r)
+	for _,item := range cars {
+		if item.ID == params["id"]{
+			json.NewEncoder(w).Encode(item)
+			return item
+		}
+	}
+
+}
 func main() {
 	r := mux.NewRouter()
 
@@ -56,7 +68,7 @@ func main() {
 
 	}
 	r.HandleFunc("/cars", getCars).Methods("GET")
-	r.HandleFunc("/cars/{id}", getCars).Methods("GET")
+	r.HandleFunc("/cars/{id}", getCar).Methods("GET")
 	r.HandleFunc("/cars", createCar).Methods("POST")
 	r.HandleFunc("/cars/{id}", updateCar).Methods("PUT")
 	r.HandleFunc("/cars", deleteCar).Methods("DELETE")
