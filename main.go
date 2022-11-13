@@ -33,6 +33,7 @@ func deleteCar(w http.ResponseWriter, r *http.Request) {
 	for index, item := range cars {
 		if item.ID == params["id"] {
 			cars = append(cars[:index], cars[index+1:]...)
+			json.NewEncoder(w).Encode(cars)
 			break
 		}
 	}
