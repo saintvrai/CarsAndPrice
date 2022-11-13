@@ -5,7 +5,9 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"log"
+	"math/rand"
 	"net/http"
+	"strconv"
 )
 
 type Car struct {
@@ -20,53 +22,58 @@ type CarBrand struct {
 
 var cars []Car
 
-func getCars(w http.ResponseWriter, r *http.Request){
+func getCars(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(cars)
 }
 
-func deleteCar(w http.ResponseWriter, r *http.Request){
+func deleteCar(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
-	for index, item := range cars{
-		if item.ID == params["id"]{
-			cars = append(cars[:index], cars [index+1:]...)
+	for index, item := range cars {
+		if item.ID == params["id"] {
+			cars = append(cars[:index], cars[index+1:]...)
 			break
 		}
 	}
 }
 
-func getCar(w http.ResponseWriter, r *http.Request){
+func getCar(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
-	for _,item := range cars {
-		if item.ID == params["id"]{
+	for _, item := range cars {
+		if item.ID == params["id"] {
 			json.NewEncoder(w).Encode(item)
-			return item
+			return
 		}
 	}
+}
+
+func createCar(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var car Car
+	_ = json.NewDecoder(r.Body).Decode(&car)
+	car.ID = strconv.Itoa(rand.Intn(100000))
+	cars = append(cars, car)
+	json.NewEncoder(w).Encode(car)
 
 }
 func main() {
 	r := mux.NewRouter()
 
-	cars = append(cars,Car{
-		ID:"1",
+	cars = append(cars, Car{
+		ID:       "1",
 		Name:     "Mark2",
 		CarBrand: &CarBrand{Name: "Toyota"},
 		CarColor: "Black",
-
 	})
 
-	cars = append(cars,Car{
-		ID:"2",
+	cars = append(cars, Car{
+		ID:       "2",
 		Name:     "President",
 		CarBrand: &CarBrand{Name: "Nissan"},
 		CarColor: "White",
-
 	})
-
-	}
 	r.HandleFunc("/cars", getCars).Methods("GET")
 	r.HandleFunc("/cars/{id}", getCar).Methods("GET")
 	r.HandleFunc("/cars", createCar).Methods("POST")
