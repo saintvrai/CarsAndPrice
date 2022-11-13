@@ -96,7 +96,6 @@ func main() {
 	r.HandleFunc("/cars", createCar).Methods("POST")
 	r.HandleFunc("/cars/{id}", updateCar).Methods("PUT")
 	r.HandleFunc("/cars", deleteCar).Methods("DELETE")
-
 	fmt.Printf("Starting server at port 8000\n")
 	log.Fatal(http.ListenAndServe(":8000", r))
 }
